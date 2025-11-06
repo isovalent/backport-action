@@ -1278,12 +1278,12 @@ exports.getMentionedIssueRefs = getMentionedIssueRefs;
 function replacePlaceholders(template, main, target) {
     const issues = getMentionedIssueRefs(main.body);
     return template
-        .replace("${pull_author}", main.user.login)
-        .replace("${pull_number}", main.number.toString())
-        .replace("${pull_title}", main.title)
-        .replace("${pull_description}", main.body ?? "")
-        .replace("${target_branch}", target)
-        .replace("${issue_refs}", issues.join(" "));
+        .replaceAll("${pull_author}", main.user.login)
+        .replaceAll("${pull_number}", main.number.toString())
+        .replaceAll("${pull_title}", main.title)
+        .replaceAll("${pull_description}", main.body ?? "")
+        .replaceAll("${target_branch}", target)
+        .replaceAll("${issue_refs}", issues.join(" "));
 }
 /**
  * @param body Text in which to search for mentioned issues
