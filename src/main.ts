@@ -25,6 +25,7 @@ async function run(): Promise<void> {
   const branch_name = core.getInput("branch_name");
   const add_labels = core.getInput("add_labels");
   const copy_labels_pattern = core.getInput("copy_labels_pattern");
+  const target_branch_prefix = core.getInput("target_branch_prefix");
   const target_branches = core.getInput("target_branches");
   const cherry_picking = core.getInput("cherry_picking");
   const merge_commits = core.getInput("merge_commits");
@@ -97,6 +98,8 @@ async function run(): Promise<void> {
     copy_labels_pattern:
       copy_labels_pattern === "" ? undefined : new RegExp(copy_labels_pattern),
     add_labels: add_labels === "" ? [] : add_labels.split(/[,]/),
+    target_branch_prefix:
+      target_branch_prefix === "" ? undefined : target_branch_prefix,
     target_branches: target_branches === "" ? undefined : target_branches,
     commits: { cherry_picking, merge_commits },
     copy_assignees: copy_assignees === "true",

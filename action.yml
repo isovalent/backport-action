@@ -149,6 +149,11 @@ inputs:
       Specifies the pull request (by its number) to backport, i.e. the source pull request.
       When set, the action will backport the specified pull request to each target branch.
       When not set, the action determines the source pull request from the event payload.
+  target_branch_prefix:
+    description: >
+      Specifies a prefix to add to each target branch when creating the backport pull request.
+      For example, when the target branch is `release-1.0` and the prefix is `stable/`, the backport pull request will be created against `stable/release-1.0`.
+      By default, no prefix is added.
   target_branches:
     description: >
       The action will backport the pull request to each specified target branch (space-delimited).

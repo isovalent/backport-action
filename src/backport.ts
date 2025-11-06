@@ -27,6 +27,7 @@ export type Config = {
   };
   copy_labels_pattern?: RegExp;
   add_labels: string[];
+  target_branch_prefix?: string;
   target_branches?: string;
   commits: {
     cherry_picking: "auto" | "pull_request_head";
@@ -834,7 +835,10 @@ export class Backport {
 }
 
 export function findTargetBranches(
-  config: Pick<Config, "source_labels_pattern" | "target_branches">,
+  config: Pick<
+    Config,
+    "source_labels_pattern" | "target_branches" | "target_branch_prefix"
+  >,
   labels: string[],
   headref: string,
 ) {
@@ -849,6 +853,8 @@ export function findTargetBranches(
       .map((t) => t.trim())
       .filter((t) => t !== "") ?? [];
 
+  const targetBranchPrefix = config.target_branch_prefix;
+
   console.log(`Found target branches in labels: ${targetBranchesFromLabels}`);
   console.log(
     `Found target branches in \`target_branches\` input: ${configuredTargetBranches}`,
@@ -859,7 +865,9 @@ export function findTargetBranches(
 
   const targetBranches = [
     ...new Set([...targetBranchesFromLabels, ...configuredTargetBranches]),
-  ].filter((t) => t !== headref);
+  ]
+    .filter((t) => t !== headref)
+    .map((t) => (targetBranchPrefix ? `${targetBranchPrefix}${t}` : t));
 
   console.log(`Determined target branches: ${targetBranches}`);
 

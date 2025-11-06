@@ -73,6 +73,32 @@ describe("find target branches", () => {
         ),
       ).toEqual([]);
     });
+
+    it("when target_branch_prefix is undefined and labels is empty", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: undefined,
+          },
+          [],
+          "feature/one",
+        ),
+      ).toEqual([]);
+    });
+
+    it("when target_branch_prefix is set and labels is empty", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: "test-prefix-",
+          },
+          [],
+          "feature/one",
+        ),
+      ).toEqual([]);
+    });
   });
 
   describe("returns selected branches", () => {
@@ -153,6 +179,59 @@ describe("find target branches", () => {
           "feature/one",
         ),
       ).toEqual(["feature/two"]);
+    });
+
+    it("when a label matches with target_branch_prefix undefined", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: undefined,
+          },
+          ["backport release-1"],
+          "feature/one",
+        ),
+      ).toEqual(["release-1"]);
+    });
+
+    it("when a label matches with target_branch_prefix set", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: "test-prefix-",
+          },
+          ["backport release-1"],
+          "feature/one",
+        ),
+      ).toEqual(["test-prefix-release-1"]);
+    });
+
+    it("when several labels match with target_branch_prefix set", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: "test-prefix-",
+          },
+          ["backport release-1", "backport another/target/branch"],
+          "feature/one",
+        ),
+      ).toEqual(["test-prefix-release-1", "test-prefix-another/target/branch"]);
+    });
+
+    it("when target_branches specified with target_branch_prefix set", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branches: "release-1 another/target/branch",
+            target_branch_prefix: "test-prefix-",
+          },
+          [],
+          "feature/one",
+        ),
+      ).toEqual(["test-prefix-release-1", "test-prefix-another/target/branch"]);
     });
   });
 });
