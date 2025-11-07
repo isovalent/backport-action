@@ -154,6 +154,11 @@ inputs:
       Specifies a prefix to add to each target branch when creating the backport pull request.
       For example, when the target branch is `release-1.0` and the prefix is `stable/`, the backport pull request will be created against `stable/release-1.0`.
       By default, no prefix is added.
+  target_branch_suffix:
+    description: >
+      Specifies a suffix to add to each target branch when creating the backport pull request.
+      For example, when the target branch is `release-1.0` and the suffix is `-backport`, the backport pull request will be created against `release-1.0-backport`.
+      By default, no suffix is added.
   target_branches:
     description: >
       The action will backport the pull request to each specified target branch (space-delimited).

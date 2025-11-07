@@ -234,4 +234,74 @@ describe("find target branches", () => {
       ).toEqual(["test-prefix-release-1", "test-prefix-another/target/branch"]);
     });
   });
+
+  describe("target_branch_suffix handling", () => {
+    it("when target_branch_suffix is undefined", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_suffix: undefined,
+          },
+          ["backport release-1"],
+          "feature/one",
+        ),
+      ).toEqual(["release-1"]);
+    });
+
+    it("when target_branch_suffix is empty string", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_suffix: "",
+          },
+          ["backport release-1", "backport another/target/branch"],
+          "feature/one",
+        ),
+      ).toEqual(["release-1", "another/target/branch"]);
+    });
+
+    // Expected behavior: suffix should be appended if implemented.
+    // Current implementation ignores suffix; this test will fail until suffix support is added.
+    it("when target_branch_suffix is set to '-suffix' (labels)", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_suffix: "-suffix",
+          },
+          ["backport release-1", "backport another/target/branch"],
+          "feature/one",
+        ),
+      ).toEqual(["release-1-suffix", "another/target/branch-suffix"]);
+    });
+
+    it("when target_branch_suffix is set to '-suffix' (target_branches input)", () => {
+      expect(
+        findTargetBranches(
+          {
+            target_branches: "release-1 another/target/branch",
+            target_branch_suffix: "-suffix",
+          },
+          [],
+          "feature/one",
+        ),
+      ).toEqual(["release-1-suffix", "another/target/branch-suffix"]);
+    });
+
+    it("when both prefix and suffix are set", () => {
+      expect(
+        findTargetBranches(
+          {
+            source_labels_pattern: default_pattern,
+            target_branch_prefix: "pre-",
+            target_branch_suffix: "-suf",
+          },
+          ["backport release-1"],
+          "feature/one",
+        ),
+      ).toEqual(["pre-release-1-suf"]);
+    });
+  });
 });

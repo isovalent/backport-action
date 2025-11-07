@@ -598,6 +598,7 @@ function findTargetBranches(config, labels, headref) {
         .map((t) => t.trim())
         .filter((t) => t !== "") ?? [];
     const targetBranchPrefix = config.target_branch_prefix;
+    const targetBranchSuffix = config.target_branch_suffix;
     console.log(`Found target branches in labels: ${targetBranchesFromLabels}`);
     console.log(`Found target branches in \`target_branches\` input: ${configuredTargetBranches}`);
     console.log(`Exclude pull request's headref from target branches: ${headref}`);
@@ -605,7 +606,8 @@ function findTargetBranches(config, labels, headref) {
         ...new Set([...targetBranchesFromLabels, ...configuredTargetBranches]),
     ]
         .filter((t) => t !== headref)
-        .map((t) => (targetBranchPrefix ? `${targetBranchPrefix}${t}` : t));
+        .map((t) => (targetBranchPrefix ? `${targetBranchPrefix}${t}` : t))
+        .map((t) => (targetBranchSuffix ? `${t}${targetBranchSuffix}` : t));
     console.log(`Determined target branches: ${targetBranches}`);
     return targetBranches;
 }
