@@ -1,4 +1,5 @@
-import { findTargetBranches } from "../backport";
+import { describe, it, expect } from "vitest";
+import { findTargetBranches } from "../backport.js";
 
 const default_pattern = /^backport ([^ ]+)$/;
 
@@ -262,8 +263,6 @@ describe("find target branches", () => {
       ).toEqual(["release-1", "another/target/branch"]);
     });
 
-    // Expected behavior: suffix should be appended if implemented.
-    // Current implementation ignores suffix; this test will fail until suffix support is added.
     it("when target_branch_suffix is set to '-suffix' (labels)", () => {
       expect(
         findTargetBranches(
